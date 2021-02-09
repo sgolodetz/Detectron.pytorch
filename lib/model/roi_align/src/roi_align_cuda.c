@@ -1,11 +1,10 @@
-#include <ATen/ATen.h>
 #include <THC/THC.h>
 #include <math.h>
 #include "roi_align_kernel.h"
 
-THCState *state = at::globalContext().lazyInitCUDA();
+THCState *state = NULL;
 
-extern "C" int roi_align_forward_cuda(int aligned_height, int aligned_width, float spatial_scale,
+int roi_align_forward_cuda(int aligned_height, int aligned_width, float spatial_scale,
                         THCudaTensor * features, THCudaTensor * rois, THCudaTensor * output)
 {
     // Grab the input tensor
@@ -40,7 +39,7 @@ extern "C" int roi_align_forward_cuda(int aligned_height, int aligned_width, flo
     return 1;
 }
 
-extern "C" int roi_align_backward_cuda(int aligned_height, int aligned_width, float spatial_scale,
+int roi_align_backward_cuda(int aligned_height, int aligned_width, float spatial_scale,
                         THCudaTensor * top_grad, THCudaTensor * rois, THCudaTensor * bottom_grad)
 {
     // Grab the input tensor
